@@ -26,7 +26,7 @@ foreach my $sasaddr(@SASs){
 	}
 } 
 
-sleep 50;
+sleep 5;
 
 foreach my $sasaddr (@SASs){
 	my $DEV = $DEVs[0];
