@@ -1,4 +1,34 @@
-package MT;
+package Tape::MT;
+
+=head1 NAME
+
+Tape::MT - a wrapper around a bunch of MT commands
+
+=head1 SYNOPSIS
+
+use Tape::MT;
+
+my $tape_device = "/dev/nst0";
+
+$mt = new MT( device=>$tape_device);
+
+$mt->asf(2); # go to second file on tape
+
+$mt->fsf(); # move forward
+
+my $header_file = "/tmp/volume/header_file
+my $volume_dir = "/tmp/volume/volume_dir";
+
+$mt->cat($header_file); # cat the contents of tape plaintext file to disk file
+$mt->tar($volume_dir); # extract tarball into volume dir
+
+
+=head1 DESCRIPTION
+
+Tape::MT wraps a bunch of the mt commands and adds a couple of useful redirection commands (cat, tar) to take tape archives and recover them
+onto disk
+
+=cut
 
 
 use strict;
@@ -7,21 +37,11 @@ use Moose;
 use Data::Printer;
 use IPC::Run qw(run);
 
-has 'tape_device' => ( is => 'rw', default => '/dev/nst0' );
+with 'Tape::cmd';
 
+has 'tape_device' => ( is => 'rw', default => '/dev/nst0' );
 has 'mt_cmd' => ( is=>'rw', default => '/bin/mt');
 
-sub run_cmd {
-    my ($self, $cmd) = @_;
-
-    my $out;
-    p $cmd;
-    run $cmd, ">", \$out or die("cmd: ".p($cmd)." : $?");
-
-    return $out
-
-    
-}
 
 sub run_mt {
     my ($self, $cmd) = @_;
@@ -94,4 +114,6 @@ sub tar {
 
     run "tar", "-C", $chdir, "-xvf", $self->tape_device or die ("tar failed: $? ");
 }
+
+
 1;

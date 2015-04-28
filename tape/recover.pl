@@ -6,12 +6,12 @@ use FindBin;
 use lib "$FindBin::Bin/lib";
 
 use File::Spec;
-use MT;
+use Tape::MT;
 
 
 my $tape_device = "/dev/nst0";
 
-$mt = new MT( device=>$tape_device);
+$mt = new Tape::MT( device=>$tape_device);
 
 my $tape_script_root = "/ohri/archive/archive_scripts";
 my $dest_root = "/ohri/archive/tapes";
