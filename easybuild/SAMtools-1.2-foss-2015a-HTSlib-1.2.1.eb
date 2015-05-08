@@ -25,7 +25,7 @@ patches = ['%(name)s-%(version)s_extHTSlib_Makefile.patch']
 
 htslib = 'HTSlib'
 htsver = '1.2.1'
-versionsuffix = '-%s-%s' % (htslib, htsver)
+versionsuffix = '-%s-%s-intel' % (htslib, htsver)
 
 dependencies = [
     (htslib, htsver),
