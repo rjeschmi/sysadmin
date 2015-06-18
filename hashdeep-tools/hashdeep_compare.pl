@@ -16,13 +16,17 @@ my $hashdeep_fh;
 open ($hashdeep_fh, "<", $hashdeep_file);
 
 my $hd = {};
+
+my $depth=1;
 while (<$hashdeep_fh>) {
     chomp;
     if ( /(^%|^#)/ ) { next; };
     my @line = split (/,/);
     if (@line > 1) {
         #print $line[1]."\n";
-        $hd->{$line[1]} = $line[3];
+        $line[3]=~/(?:^[^\/]+\/){1}(.*)$/;
+        #print "1: $1 2: $line[1]\n";
+        $hd->{$1} = $line[1];
     }
     
 }
@@ -34,9 +38,9 @@ while (<$md5sum_fh>) {
     chomp;
     s/\r$//;
     if( /^([a-f0-9]+)\s+\*{0,1}(.*)$/) {
-	if ($hd->{$1}) {
-           print "[$1] $2 :: ".$hd->{$1} ."\n";
-           delete $hd->{$1};
+	if ($hd->{$2} && $hd->{$2} eq $1) {
+           print "[$1] $2 :: ".$hd->{$2} ."\n";
+           delete $hd->{$2};
 	}
 	else {
            print "[$1] $2 :: ERROR\n";
