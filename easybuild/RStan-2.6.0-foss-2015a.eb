@@ -1,0 +1,51 @@
+
+easyblock = 'Bundle'
+
+name = 'RStan'
+version = '2.6.0'
+rver  = '3.2.0'
+
+versionsuffix = '-R-%s' % rver
+
+homepage = 'http://www.r-project.org/'
+description = """R is a free software environment for statistical computing and graphics."""
+
+
+toolchain = {'name': 'foss', 'version': '2015a'}
+
+exts_defaultclass = 'RPackage'
+exts_filter = ("R -q --no-save", "library(%(ext_name)s)")
+
+dependencies = [
+    ('R', rver, '-bare'),
+]
+
+name_tmpl = '%(name)s_%(version)s.tar.gz'
+
+cran_ext_options = {
+    'source_urls': [
+        'http://cran.r-project.org/src/contrib/Archive/%(name)s',  # package archive
+        'http://cran.r-project.org/src/contrib/',  # current version of packages
+        'http://cran.freestatistics.org/src/contrib',  # mirror alternative for current packages
+    ],
+    'source_tmpl': name_tmpl,
+}
+
+rstan_ext_options = {
+    'source_urls': [
+        'http://rstan.org/repo/src/contrib/',
+    ],
+    'source_tmpl': name_tmpl,
+}
+
+modextrapaths = {'R_LIBS': ''}
+
+exts_list = [
+    ('lattice',     '0.20-31',          cran_ext_options),
+    ('Matrix',      '1.2-0',          cran_ext_options),
+    ('Rcpp',        '0.11.6',       cran_ext_options),
+    ('inline',      '0.3.14',       cran_ext_options),
+    ('RcppEigen',   '0.3.2.4.0',    cran_ext_options),
+    ('BH',          '1.55.0-3',     cran_ext_options),
+    ('rstan',       '2.6.0',        rstan_ext_options),
+]
