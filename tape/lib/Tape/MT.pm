@@ -8,7 +8,7 @@ Tape::MT - a wrapper around a bunch of MT commands
 
 use Tape::MT;
 
-my $tape_device = "/dev/nst0";
+my $tape_device = "/dev/nst1";
 
 $mt = new MT( device=>$tape_device);
 
@@ -39,7 +39,7 @@ use IPC::Run qw(run);
 
 with 'Tape::cmd';
 
-has 'tape_device' => ( is => 'rw', default => '/dev/nst0' );
+has 'tape_device' => ( is => 'rw', default => '/dev/nst1' );
 has 'mt_cmd' => ( is=>'rw', default => '/bin/mt');
 
 

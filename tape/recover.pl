@@ -9,7 +9,7 @@ use File::Spec;
 use Tape::MT;
 
 
-my $tape_device = "/dev/nst0";
+my $tape_device = "/dev/nst1";
 
 $mt = new Tape::MT( device=>$tape_device);
 
