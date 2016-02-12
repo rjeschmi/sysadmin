@@ -1,0 +1,86 @@
+diff -ru apt-1.17.0-src-a/sdk/chipstream/CumulativeStats.h apt-1.17.0-src-b/sdk/chipstream/CumulativeStats.h
+--- apt-1.17.0-src-a/sdk/chipstream/CumulativeStats.h	2015-02-03 13:58:59.000000000 -0500
++++ apt-1.17.0-src-b/sdk/chipstream/CumulativeStats.h	2015-07-20 15:22:34.471259049 -0400
+@@ -22,10 +22,10 @@
+ #ifndef _CUMULATIVESTATS_H_
+ #define _CUMULATIVESTATS_H_
+ 
++#include <algorithm>
+ #include "portability/affy-base-types.h"
+ #include "util/Err.h"
+ //
+-#include <algorithm>
+ #include <cstring>
+ #include <string>
+ #include <vector>
+diff -ru apt-1.17.0-src-a/sdk/stats/stats.h apt-1.17.0-src-b/sdk/stats/stats.h
+--- apt-1.17.0-src-a/sdk/stats/stats.h	2015-02-03 13:57:20.000000000 -0500
++++ apt-1.17.0-src-b/sdk/stats/stats.h	2015-07-20 15:21:27.126960967 -0400
+@@ -58,6 +58,26 @@
+ 
+ #undef _RANDOM_SAMPLE_ERROR_
+ 
++/// @brief     Find the value for a given precentile, modifying the data is ok.
++/// @param     start     beginning iterator
++/// @param     stop      end iterator
++/// @param     percentage the percentile to find (0-100)
++/// @return    the value found
++/// @remark Work with the data "in_place" -- we may shuffle
++/// the values around as we work. No copy needed.
++template <class RAIterator>
++typename iterator_traits<RAIterator>::value_type  
++percentile_in_place(RAIterator start, RAIterator stop, double percentage) {
++  // be sure percentage is in range.
++  assert((0.0<=percentage)&&(percentage<=100.0));
++  //
++  double bucket_index = (stop - start - 1)* percentage / 100.0;
++  return (bucket_index == trunc(bucket_index)?
++	  RandomizedSelect(start, stop, (int) bucket_index):
++	  (RandomizedSelect(start, stop, (int) floor(bucket_index)) +
++	   RandomizedSelect(start, stop, (int) ceil(bucket_index)))/2);
++};
++
+ /// @param     start     beginning iterator
+ /// @param     stop      end iterator
+ /// @param     percentage which precentile to return (0-100)
+@@ -98,26 +118,6 @@
+     return percentile_in_place(tmp.begin(), tmp.end(), percentage);
+ }
+ 
+-/// @brief     Find the value for a given precentile, modifying the data is ok.
+-/// @param     start     beginning iterator
+-/// @param     stop      end iterator
+-/// @param     percentage the percentile to find (0-100)
+-/// @return    the value found
+-/// @remark Work with the data "in_place" -- we may shuffle
+-/// the values around as we work. No copy needed.
+-template <class RAIterator>
+-typename iterator_traits<RAIterator>::value_type  
+-percentile_in_place(RAIterator start, RAIterator stop, double percentage) {
+-  // be sure percentage is in range.
+-  assert((0.0<=percentage)&&(percentage<=100.0));
+-  //
+-  double bucket_index = (stop - start - 1)* percentage / 100.0;
+-  return (bucket_index == trunc(bucket_index)?
+-	  RandomizedSelect(start, stop, (int) bucket_index):
+-	  (RandomizedSelect(start, stop, (int) floor(bucket_index)) +
+-	   RandomizedSelect(start, stop, (int) ceil(bucket_index)))/2);
+-};
+-
+ template <class RAIterator>
+ class Median: public binary_function<RAIterator, RAIterator, typename iterator_traits<RAIterator>::value_type> {
+  public:
+Only in apt-1.17.0-src-b/sdk/stats: stats.h.orig
+diff -ru apt-1.17.0-src-a/sdk/util/AffxArray.h apt-1.17.0-src-b/sdk/util/AffxArray.h
+--- apt-1.17.0-src-a/sdk/util/AffxArray.h	2015-02-03 14:01:26.000000000 -0500
++++ apt-1.17.0-src-b/sdk/util/AffxArray.h	2015-07-20 15:21:28.575165278 -0400
+@@ -210,7 +210,7 @@
+ 
+     void add(TYPE* obj)
+     {
+-        push_back(obj);
++        this->push_back(obj);
+     }
+ 
+     int binarySearch(TYPE& obj, int iCompareCode)
+Only in apt-1.17.0-src-b/sdk/util: AffxArray.h.orig

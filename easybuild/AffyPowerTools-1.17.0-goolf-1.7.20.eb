@@ -1,0 +1,23 @@
+
+easyblock = 'ConfigureMake'
+
+name = 'apt'
+
+version = '1.17.0'
+
+homepage = "http://www.affymetrix.com/estore/partners_programs/programs/developer/tools/powertools.affx#1_2"
+description = "Affy Power Tools"
+
+toolchain = {'name': 'goolf', 'version': '1.7.20'}
+
+sources = ['%(name)s-%(version)s-src.zip']
+patch = ['%(name)s-%(version)s.patch']
+preconfigopts = 'cd sdk && '
+
+osdependencies = [ ('cppunit')]
+
+prebuildopts  = 'cd sdk && '
+
+dependencies = [
+    ('HDF5', '1.8.15'),
+]

@@ -1,0 +1,25 @@
+easyblock = 'MakeCp'
+
+name = 'vcflib'
+version = '1.0.0-rc0'
+
+homepage = 'https://github.com/ekg/vcflib'
+description = """vcflib provides methods to manipulate and interpret sequence variation as it can be described by VCF."""
+
+toolchain = {'name': 'foss', 'version': '2015a'}
+
+sources = ['%(name)s-%(version)s.tar.gz']
+source_urls = []
+
+dependencies = [('zlib', '1.2.8')]
+
+onlytcmod = ['CXXFLAGS']
+
+files_to_copy = [(['bin/vcfregionreduce','bin/vcfindelproximity','bin/vcfvarstats','bin/vcfnosnps','bin/vcfmultiwayscripts','bin/vcfmultiallelic','bin/vcfregionreduce_uncompressed','bin/vcfnoindels','bin/vcfregionreduce_pipe','bin/vcfplotaltdiscrepancy.r','bin/vcfclearinfo','bin/vcfcomplex','bin/vcf2bed.py','bin/vcfsort','bin/bed2region','bin/vcfmultiway','bin/vcfnulldotslashdot','bin/vcfgtcompare.sh','bin/vcfremovenonATGC','bin/vcfplottstv.sh','bin/vcf_strip_extra_headers','bin/vcfplotsitediscrepancy.r','bin/vcfregionreduce_and_cut','bin/vcfnobiallelicsnps','bin/vcfplotaltdiscrepancy.sh','bin/vcfclearid','bin/vcffirstheader','bin/vcfprintaltdiscrepancy.sh','bin/vcfsnps','bin/vcfqualfilter','bin/vcf2sqlite.py','bin/vcfprintaltdiscrepancy.r','bin/plot_roc.r','bin/vcfbiallelic','bin/vcfindels'], 'bin'), 'LICENSE', 'README.md']
+
+sanity_check_paths = {
+    'files': ['bin/vcfregionreduce','bin/vcfindelproximity','bin/vcfvarstats','bin/vcfnosnps','bin/vcfmultiwayscripts','bin/vcfmultiallelic','bin/vcfregionreduce_uncompressed','bin/vcfnoindels','bin/vcfregionreduce_pipe','bin/vcfplotaltdiscrepancy.r','bin/vcfclearinfo','bin/vcfcomplex','bin/vcf2bed.py','bin/vcfsort','bin/bed2region','bin/vcfmultiway','bin/vcfnulldotslashdot','bin/vcfgtcompare.sh','bin/vcfremovenonATGC','bin/vcfplottstv.sh','bin/vcf_strip_extra_headers','bin/vcfplotsitediscrepancy.r','bin/vcfregionreduce_and_cut','bin/vcfnobiallelicsnps','bin/vcfplotaltdiscrepancy.sh','bin/vcfclearid','bin/vcffirstheader','bin/vcfprintaltdiscrepancy.sh','bin/vcfsnps','bin/vcfqualfilter','bin/vcf2sqlite.py','bin/vcfprintaltdiscrepancy.r','bin/plot_roc.r','bin/vcfbiallelic','bin/vcfindels', 'LICENSE', 'README.md'],
+    'dirs': [],
+}
+
+moduleclass = 'bio'
