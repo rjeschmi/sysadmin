@@ -10,45 +10,10 @@ import argparse
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session, relationship, subqueryload, joinedload
 from sqlalchemy import create_engine, ForeignKey, Column, Integer
-
+from bacula.db.schema import Schema, Job, File
 DEBUG = False
 
 pp = pprint.PrettyPrinter(indent=4)
-
-Base = automap_base()
-
-class Job(Base):
-    __tablename__ = 'job'
-
-    files = relationship("File", backref="job_ref", lazy="joined" )
-
-class File(Base):
-    __tablename__ = 'file'
-
-    jobid = Column(ForeignKey("job.jobid"))
-    filenameid = Column(ForeignKey("filename.filenameid"))
-    pathid = Column(ForeignKey("path.pathid"))
-
-    filename = relationship("FileName", back_populates="files", lazy="joined")
-    path = relationship("Path", back_populates="files", lazy="joined")
-    job = relationship("Job", lazy="joined")
-
-class FileName(Base):
-    __tablename__ = 'filename'
-    
-    filenameid = Column(Integer, primary_key=True)
-    files = relationship("File", back_populates="filename")
-    
-
-class Path(Base):
-    __tablename__ = 'path'
-
-    pathid = Column(Integer, primary_key=True)
-    files = relationship("File", back_populates="path")
-
-    
-engine = create_engine('postgresql://bacula_ro:bacula_ro@127.0.0.1/bacula',client_encoding='utf8')
-Base.prepare(engine, reflect=True)
 
 
 parser = argparse.ArgumentParser(description='Compare md5sum output to bacula database')
@@ -56,10 +21,12 @@ parser.add_argument('--tape', dest='tape', help='the tape number (1001-2000 for 
 parser.add_argument('md5sumfiles', nargs="+", help='the input file to compare')
 args = parser.parse_args()
 
-session = Session(engine)
+schema = Schema()
+
+session = schema.get_session()
 
 
-TapeJob = session.query(Job).filter(Job.name=='Tape-%s' % args.tape)
+TapeJob = session.query(Job).filter(Job.name == 'Tape-%s' % args.tape)
 FileNameSession=session.query(File).\
             join(Path).\
             join(FileName).\
@@ -81,7 +48,7 @@ for file in tape_files:
         else:
             sys.stderr.write("the filename is not unicode\n")
 
-    tape_dict[os.path.join(path,filename)]=file
+    tape_dict[os.path.join(path, filename)] = file
 
 split_md5_re = re.compile(r'([a-f0-9]+)\s+(\./.*)$')
 good_md5 = 0
@@ -102,7 +69,7 @@ for md5sumfile in args.md5sumfiles:
         path_like = '/ohri/archive/tapes/%s/%s/%s' % (args.tape, subvol_path, '/'.join(filepath[1:]))
         try:
             file=tape_dict[path_like]
-        except KeyError: 
+        except KeyError:
             print "not in DB path_like: %s" % path_like
             continue
         if file.md5 != md5_base64 and filepath[-2] != '.archive-metadata':
@@ -114,7 +81,7 @@ for md5sumfile in args.md5sumfiles:
                 except UnicodeDecodeError:
                     print "caught a unicode error"
                     print "file: %s name: %s path: %s " % (file.fileid, file.filenameid, file.pathid)
-                    
+
         else:
             good_md5 = good_md5+1
 
