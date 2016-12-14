@@ -1,0 +1,3 @@
+use catalog=MyCatalog
+delete volume=Franklin-Vol-0307 yes
+quit

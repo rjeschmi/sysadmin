@@ -28,6 +28,7 @@ foreach my $sasaddr(@SASs){
 
 sleep 5;
 
+
 foreach my $sasaddr (@SASs){
 	my $DEV = $DEVs[0];
 	qx!$SG_SES --sas-addr=$sasaddr --clear=ident /dev/$DEV 2>&1!;

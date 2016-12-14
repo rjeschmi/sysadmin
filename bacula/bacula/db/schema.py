@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session, relationship, subqueryload
 from sqlalchemy import create_engine, ForeignKey, Column, Integer
 
 Base = automap_base()
+ENGINE = create_engine('postgresql://bacula_ro:bacula_ro@127.0.0.1/bacula', client_encoding='utf8')
 
 class Job(Base):
     """Job class of bacula database"""
@@ -44,7 +45,7 @@ class Schema():
     """The generic schema class"""
 
     def __init__(self):
-        self.engine = create_engine('postgresql://bacula_ro:bacula_ro@127.0.0.1/bacula', client_encoding='utf8')
+        self.engine = ENGINE
         Base.prepare(self.engine, reflect=True)
         self.session = Session(self.engine)
 

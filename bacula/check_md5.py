@@ -10,7 +10,7 @@ import argparse
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session, relationship, subqueryload, joinedload
 from sqlalchemy import create_engine, ForeignKey, Column, Integer
-from bacula.db.schema import Schema, Job, File
+from bacula.db.schema import Schema, Job, File, Path, FileName
 DEBUG = False
 
 pp = pprint.PrettyPrinter(indent=4)
